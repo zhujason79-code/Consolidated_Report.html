@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026年全国主要省份独立储能收益终极汇总看板</title>
+    <!-- 引入 Chart.js 绘图引擎 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root { --primary: #3498db; --secondary: #e67e22; --accent: #9b59b6; --success: #2ecc71; --danger: #e74c3c; --bg: #f4f7f9; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; margin: 0; padding: 20px; background-color: var(--bg); display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 1200px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 10px; }
+        p.subtitle { text-align: center; color: #7f8c8d; margin-bottom: 30px; font-size: 14px; }
+        .chart-box { position: relative; height: 500px; width: 100%; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .card { padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #eee; border-top: 4px solid var(--primary); transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); }
+        .card h4 { margin: 0 0 8px 0; color: #333; display: flex; justify-content: space-between; align-items: center; }
+        .total-val { color: var(--danger); font-weight: bold; font-size: 16px; }
+        .card p { margin: 0; font-size: 12.5px; color: #666; line-height: 1.6; }
+        .footer { margin-top: 30px; text-align: center; font-size: 11px; color: #999; border-top: 1px dashed #ccc; padding-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>2026年全国主要省份独立储能预测收益终极看板</h2>
+        <p class="subtitle">统一100MW/200MWh (2h) 规模 | 基于全对话深度校准、实测账单及114号文最新规则汇总</p>
+        
+        <div class="chart-box">
+            <canvas id="ultraChart"></canvas>
+        </div>
+
+        <div class="grid">
+            <div class="card" style="border-top-color:var(--success)">
+                <h4>蒙西 <span class="total-val">5720万</span></h4>
+                <p><b>投资标杆</b>：0.28元/kWh十年放电补贴刚性最强。西北大价差环境保障了极高的套利基础，收益稳定性全国居首。</p>
+            </div>
+            <div class="card" style="border-top-color:#1abc9c">
+                <h4>广东 <span class="total-val">5000万</span></h4>
+                <p><b>规则红利</b>：2026结算细则明确充电豁免输配电费，实测减支约500万。调频市场回归理性，靠多品种辅服组合溢价。</p>
+            </div>
+            <div class="card" style="border-top-color:var(--primary)">
+                <h4>甘肃 <span class="total-val">4779万</span></h4>
+                <p><b>规范运作</b>：依据47.5%可靠容量系数核定锁定1379万底薪。机制透明，通过15min精细调度博取西北高波动红利。</p>
+            </div>
+            <div class="card" style="border-top-color:var(--accent)">
+                <h4>山西 <span class="total-val">4255万</span></h4>
+                <p><b>技术校准</b>：调频红利随装机增加回归2200万均值。依然是全国调频溢价之冠，响应精度K值是盈利分水岭。</p>
+            </div>
+            <div class="card" style="border-top-color:#3498db">
+                <h4>山东 <span class="total-val">4250万</span></h4>
+                <p><b>进取上修</b>：示范项目2倍认定+AI算法捕捉负电价。通过极致交易能力回补租赁收益损失，年循环400次+。</p>
+            </div>
+            <div class="card" style="border-top-color:var(--secondary)">
+                <h4>河南 <span class="total-val">4230万</span></h4>
+                <p><b>避险上修</b>：实测验证0.383元现货兜底。虽2h容量电费受限，但兜底保障使其成为抗跌性最强的防御型资产。</p>
+            </div>
+            <div class="card" style="border-top-color:#95a5a6">
+                <h4>青海 <span class="total-val">4100万</span></h4>
+                <p><b>系数红利</b>：执行“时长/4”核定，显著优于河南/甘肃。2h项目实得容量费更高，为西北新晋价值洼地。</p>
+            </div>
+        </div>
+        <div class="footer">更新时间：2026-03-22 | 数据依据：全国21省实测结算对标、114号文核定倍率及公众号智库汇总</div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const ctx = document.getElementById('ultraChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['蒙西', '广东', '甘肃', '山西', '山东', '河南', '青海'],
+                    labels_full: ['蒙西地区', '广东省', '甘肃省', '山西省', '山东省', '河南省', '青海省'],
+                    datasets: [
+                        { 
+                            label: '现货套利/兜底/补贴 (万)', 
+                            data: [3100, 2800, 2850, 1055, 3000, 3230, 1800], 
+                            backgroundColor: '#3498db' 
+                        },
+                        { 
+                            label: '容量补偿/电费/租赁 (万)', 
+                            data: [2200, 1000, 1379, 1000, 1250, 550, 1650], 
+                            backgroundColor: '#e67e22' 
+                        },
+                        { 
+                            label: '调频/其他辅助服务 (万)', 
+                            data: [420, 1200, 550, 2200, 0, 450, 650], 
+                            backgroundColor: '#9b59b6' 
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'top', labels: { font: { size: 13, weight: 'bold' } } },
+                        tooltip: { mode: 'index', intersect: false, padding: 12 }
+                    },
+                    scales: { 
+                        x: { stacked: true, grid: { display: false } }, 
+                        y: { 
+                            stacked: true, 
+                            beginAtZero: true, 
+                            title: { display: true, text: '年度总收益预测 (万元)', font: { size: 14, weight: 'bold' } } 
+                        } 
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
